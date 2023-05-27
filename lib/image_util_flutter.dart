@@ -3,9 +3,10 @@ library image_util;
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
-import 'package:flutter_image_util/src/image_general.dart';
-import 'package:flutter_image_util/src/image_load.dart';
-import 'package:flutter_image_util/src/image_save.dart';
+
+import './src/image_general.dart';
+import './src/image_load.dart';
+import './src/image_save.dart';
 
 enum ImageFormat { jpg, png, webp }
 
