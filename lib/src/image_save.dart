@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:image_util/src/image_general.dart';
+import 'package:flutter_image_util/src/image_general.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../image_util.dart';
+import '../flutter_image_util.dart';
 import 'image_save/download_stub.dart'
     if (dart.library.io) 'download_io.dart'
     if (dart.library.html) 'download_html.dart';

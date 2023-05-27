@@ -6,7 +6,7 @@ import 'package:flutter_exif_plugin/tags.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_size_getter/image_size_getter.dart' as imgsize;
 
-import '../image_util.dart';
+import '../flutter_image_util.dart';
 
 class ImageGeneral {
   // Compresses `bytes` to PNG.
