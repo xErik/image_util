@@ -3,14 +3,14 @@ library image_util;
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
-import 'package:image_util/src/image_general.dart';
-import 'package:image_util/src/image_load.dart';
-import 'package:image_util/src/image_save.dart';
+import 'package:flutter_image_util/src/image_general.dart';
+import 'package:flutter_image_util/src/image_load.dart';
+import 'package:flutter_image_util/src/image_save.dart';
 
 enum ImageFormat { jpg, png, webp }
 
 /// Assortment of methods to load, save, share and manipulate images.
-class ImageUtil {
+class FlutterImageUtil {
   // --------------------------------------------------------------------
   // SAVE
   // --------------------------------------------------------------------
