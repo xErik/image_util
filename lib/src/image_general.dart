@@ -5,8 +5,7 @@ import 'package:flutter_exif_plugin/flutter_exif_plugin.dart';
 import 'package:flutter_exif_plugin/tags.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_size_getter/image_size_getter.dart' as imgsize;
-
-import '../image_util_flutter.dart';
+import 'package:image_util_flutter/image_util_flutter.dart';
 
 class ImageGeneral {
   // Compresses `bytes` to PNG.
@@ -22,7 +21,7 @@ class ImageGeneral {
       Uint8List pngBytes, double width, double height,
       {int quality = 100, int rotate = 0}) async {
     return await compress(pngBytes, width, height,
-        format: ImageFormat.jpg, quality: quality);
+        format: ImageFormat.jpeg, quality: quality);
   }
 
   /// Compresses `bytes` to WEBP.
@@ -54,7 +53,7 @@ class ImageGeneral {
       Uint8List pngBytes, double width, double height,
       {int quality = 100,
       int rotate = 0,
-      ImageFormat format = ImageFormat.jpg}) async {
+      ImageFormat format = ImageFormat.jpeg}) async {
     return await FlutterImageCompress.compressWithList(
       pngBytes,
       minWidth: width.toInt(),
@@ -84,7 +83,7 @@ class ImageGeneral {
 
   /// Rotates and image.
   static Future<Uint8List> rotate(Uint8List bytes, int rotate,
-      {ImageFormat format = ImageFormat.jpg}) async {
+      {ImageFormat format = ImageFormat.jpeg}) async {
     rotate = rotate % 360;
     final size = getSize(bytes);
     return compress(bytes, size.width, size.height,

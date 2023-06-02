@@ -3,15 +3,14 @@ library image_util;
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
+import 'package:image_util_flutter/src/image_general.dart';
+import 'package:image_util_flutter/src/image_load.dart';
+import 'package:image_util_flutter/src/image_save.dart';
 
-import './src/image_general.dart';
-import './src/image_load.dart';
-import './src/image_save.dart';
-
-enum ImageFormat { jpg, png, webp }
+enum ImageFormat { jpeg, png, webp }
 
 /// Assortment of methods to load, save, share and manipulate images.
-class FlutterImageUtil {
+class ImageUtilFlutter {
   // --------------------------------------------------------------------
   // SAVE
   // --------------------------------------------------------------------
@@ -42,7 +41,7 @@ class FlutterImageUtil {
     Size? size,
     int? dpi,
     int rotate = 0,
-    ImageFormat format = ImageFormat.jpg,
+    ImageFormat format = ImageFormat.jpeg,
   }) async {
     return ImageSave.shareAs(title, message, bytes, box,
         quality: quality, size: size, dpi: dpi, rotate: rotate, format: format);
@@ -64,7 +63,7 @@ class FlutterImageUtil {
     Size? size,
     int? dpi,
     int rotate = 0,
-    ImageFormat format = ImageFormat.jpg,
+    ImageFormat format = ImageFormat.jpeg,
   }) async {
     return ImageSave.saveAs(format, bytes, name,
         album: album, quality: quality, size: size, dpi: dpi, rotate: rotate);
@@ -85,7 +84,7 @@ class FlutterImageUtil {
   /// Loads an image from the local gallery.
   static Future<Uint8List> loadFromGallery(
       double widthMax, double heightMax, int quality) async {
-    return await ImageLoad.loadImageCamera(widthMax, heightMax, quality);
+    return await ImageLoad.loadImageGallery(widthMax, heightMax, quality);
   }
 
   /// Loads an image using the local camera.
@@ -133,7 +132,7 @@ class FlutterImageUtil {
 
   /// Rotates and image.
   static Future<Uint8List> rotate(Uint8List bytes, int rotate,
-      {ImageFormat format = ImageFormat.jpg}) async {
+      {ImageFormat format = ImageFormat.jpeg}) async {
     return ImageGeneral.rotate(bytes, rotate);
   }
 }

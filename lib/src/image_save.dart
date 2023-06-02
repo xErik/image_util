@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_util_flutter/image_util_flutter.dart';
+import 'package:image_util_flutter/src/image_general.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../image_util_flutter.dart';
-import '../src/image_general.dart';
 import 'image_save/download_stub.dart'
-    if (dart.library.io) 'download_io.dart'
-    if (dart.library.html) 'download_html.dart';
+    if (dart.library.io) 'image_save/download_io.dart'
+    if (dart.library.html) 'image_save/download_html.dart';
 
 /// Utility to save and share images.
 ///
@@ -33,7 +33,7 @@ class ImageSave {
       Size? size,
       int? dpi,
       int rotate = 0,
-      ImageFormat format = ImageFormat.jpg}) async {
+      ImageFormat format = ImageFormat.jpeg}) async {
     if (kIsWeb) {
       throw 'Sharing does not work on Web, use saveToJpg() instead.';
     }

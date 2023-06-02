@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-
-import '../src/image_general.dart';
+import 'package:image_util_flutter/src/image_general.dart';
 
 class ImageLoad {
   static Future<Uint8List> loadImageWeb(

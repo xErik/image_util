@@ -1,6 +1,6 @@
 name: image_util_flutter
 description: Functions to load, save, share and manipulate images as bytes.
-version: 0.0.1
+version: 0.0.5
 repository: https://github.com/xErik/image_util
 
 environment:
