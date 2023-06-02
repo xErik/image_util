@@ -9,29 +9,44 @@ import 'package:image_util_flutter/image_util_flutter.dart';
 
 class ImageGeneral {
   // Compresses `bytes` to PNG.
-  static Future<Uint8List> compressToPng(
-      Uint8List pngBytes, double width, double height,
-      {int quality = 100, int rotate = 0}) async {
-    return await compress(pngBytes, width, height,
-        format: ImageFormat.png, quality: quality);
+  static Future<Uint8List> compressToPng(Uint8List pngBytes,
+      {double? width,
+      double? height,
+      int? quality = 100,
+      int rotate = 0}) async {
+    return await compress(pngBytes,
+        width: width,
+        height: height,
+        format: ImageFormat.png,
+        quality: quality);
   }
 
   /// Compresses `bytes` to JPG.
-  static Future<Uint8List> compressToJpg(
-      Uint8List pngBytes, double width, double height,
-      {int quality = 100, int rotate = 0}) async {
-    return await compress(pngBytes, width, height,
-        format: ImageFormat.jpeg, quality: quality);
+  static Future<Uint8List> compressToJpg(Uint8List pngBytes,
+      {double? width,
+      double? height,
+      int? quality = 100,
+      int rotate = 0}) async {
+    return await compress(pngBytes,
+        width: width,
+        height: height,
+        format: ImageFormat.jpeg,
+        quality: quality);
   }
 
   /// Compresses `bytes` to WEBP.
   ///
   /// Only an Android.
-  static Future<Uint8List> compressToWebp(
-      Uint8List pngBytes, double width, double height,
-      {int quality = 100, int rotate = 0}) async {
-    return await compress(pngBytes, width, height,
-        format: ImageFormat.webp, quality: quality);
+  static Future<Uint8List> compressToWebp(Uint8List pngBytes,
+      {double? width,
+      double? height,
+      int? quality = 100,
+      int rotate = 0}) async {
+    return await compress(pngBytes,
+        width: width,
+        height: height,
+        format: ImageFormat.webp,
+        quality: quality);
   }
 
   /// Returns a list of valid compression formats. Currently
@@ -49,16 +64,22 @@ class ImageGeneral {
   static List<String> get compressFormats =>
       CompressFormat.values.map<String>((e) => e.name).toList();
 
-  static Future<Uint8List> compress(
-      Uint8List pngBytes, double width, double height,
-      {int quality = 100,
+  static Future<Uint8List> compress(Uint8List pngBytes,
+      {double? width,
+      double? height,
+      int? quality = 100,
       int rotate = 0,
       ImageFormat format = ImageFormat.jpeg}) async {
+    if (width == null || height == null) {
+      final size = getSize(pngBytes);
+      width = size.width;
+      height = size.height;
+    }
     return await FlutterImageCompress.compressWithList(
       pngBytes,
       minWidth: width.toInt(),
       minHeight: height.toInt(),
-      quality: quality,
+      quality: quality ?? 100,
       rotate: rotate,
       format: CompressFormat.values.firstWhere((e) => e.name == format.name),
     );
@@ -86,7 +107,51 @@ class ImageGeneral {
       {ImageFormat format = ImageFormat.jpeg}) async {
     rotate = rotate % 360;
     final size = getSize(bytes);
-    return compress(bytes, size.width, size.height,
-        format: format, rotate: rotate);
+    return compress(bytes,
+        width: size.width, height: size.height, format: format, rotate: rotate);
+  }
+
+  static Future<Uint8List> scaleUp(Uint8List bytes, double minWidthOrHeight,
+      {ImageFormat format = ImageFormat.jpeg}) async {
+    final size = getSize(bytes);
+    Uint8List ret = bytes;
+
+    if (size.height < minWidthOrHeight || size.width < minWidthOrHeight) {
+      if (size.width <= size.height) {
+        final targetWidth = minWidthOrHeight;
+        final targetHeight = (minWidthOrHeight / size.width) * size.height;
+        ret = await compress(bytes,
+            format: format, width: targetWidth, height: targetHeight);
+      } else {
+        final targetHeight = minWidthOrHeight;
+        final targetWidth = (minWidthOrHeight / size.height) * size.width;
+        ret = await compress(bytes,
+            format: format, width: targetWidth, height: targetHeight);
+      }
+    }
+
+    return ret;
+  }
+
+  static Future<Uint8List> scaleDown(Uint8List bytes, double maxWidthOrHeight,
+      {ImageFormat format = ImageFormat.jpeg}) async {
+    final size = getSize(bytes);
+    Uint8List ret = bytes;
+
+    if (size.height > maxWidthOrHeight || size.width > maxWidthOrHeight) {
+      if (size.width >= size.height) {
+        final targetWidth = maxWidthOrHeight;
+        final targetHeight = (maxWidthOrHeight / size.width) * size.height;
+        ret = await compress(bytes,
+            format: format, width: targetWidth, height: targetHeight);
+      } else {
+        final targetHeight = maxWidthOrHeight;
+        final targetWidth = (maxWidthOrHeight / size.height) * size.width;
+        ret = await compress(bytes,
+            format: format, width: targetWidth, height: targetHeight);
+      }
+    }
+
+    return ret;
   }
 }

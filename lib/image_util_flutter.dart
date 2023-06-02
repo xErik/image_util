@@ -76,21 +76,24 @@ class ImageUtilFlutter {
   /// Loads an image from the given  [url].
   ///
   /// Keep in mind to adjust the server CORS settings.
-  static Future<Uint8List> loadFromWeb(
-      double widthMax, double heightMax, int quality, url) async {
-    return await ImageLoad.loadImageWeb(widthMax, heightMax, quality, url);
+  static Future<Uint8List> loadFromWeb(url,
+      {double? widthMax, double? heightMax, int? quality}) async {
+    return await ImageLoad.loadImageWeb(url,
+        widthMax: widthMax, heightMax: heightMax, quality: quality);
   }
 
   /// Loads an image from the local gallery.
   static Future<Uint8List> loadFromGallery(
-      double widthMax, double heightMax, int quality) async {
-    return await ImageLoad.loadImageGallery(widthMax, heightMax, quality);
+      {double? widthMax, double? heightMax, int? quality}) async {
+    return await ImageLoad.loadImageGallery(
+        widthMax: widthMax, heightMax: heightMax, quality: quality);
   }
 
   /// Loads an image using the local camera.
   static Future<Uint8List> loadFromCamera(
-      double widthMax, double heightMax, int quality) async {
-    return await ImageLoad.loadImageCamera(widthMax, heightMax, quality);
+      {double? widthMax, double? heightMax, int? quality}) async {
+    return await ImageLoad.loadImageCamera(
+        widthMax: widthMax, heightMax: heightMax, quality: quality);
   }
 
   // --------------------------------------------------------------------
@@ -101,16 +104,16 @@ class ImageUtilFlutter {
   static Future<Uint8List> compressToPng(
       Uint8List pngBytes, double width, double height,
       {int quality = 100}) async {
-    return await ImageGeneral.compressToPng(pngBytes, width, height,
-        quality: quality);
+    return await ImageGeneral.compressToPng(pngBytes,
+        width: width, height: height, quality: quality);
   }
 
   /// Compresses `bytes` to JPG.
   static Future<Uint8List> compressToJpg(
       Uint8List pngBytes, double width, double height,
       {int quality = 100}) async {
-    return await ImageGeneral.compressToJpg(pngBytes, width, height,
-        quality: quality);
+    return await ImageGeneral.compressToJpg(pngBytes,
+        width: width, height: height, quality: quality);
   }
 
   /// Compresses `bytes` to WEBP.
@@ -119,8 +122,8 @@ class ImageUtilFlutter {
   static Future<Uint8List> compressToWebp(
       Uint8List pngBytes, double width, double height,
       [int quality = 100]) async {
-    return await ImageGeneral.compressToWebp(pngBytes, width, height,
-        quality: quality);
+    return await ImageGeneral.compressToWebp(pngBytes,
+        width: width, height: height, quality: quality);
   }
 
   /// Sets the DPI in EXIF.
@@ -134,5 +137,17 @@ class ImageUtilFlutter {
   static Future<Uint8List> rotate(Uint8List bytes, int rotate,
       {ImageFormat format = ImageFormat.jpeg}) async {
     return ImageGeneral.rotate(bytes, rotate);
+  }
+
+  /// Scales the image up to a minimum dimension.
+  static Future<Uint8List> scaleUp(
+      Uint8List bytes, double minWidthOrHeight) async {
+    return ImageGeneral.scaleUp(bytes, minWidthOrHeight);
+  }
+
+  /// Scales the image down to a maximum dimension.
+  static Future<Uint8List> scaleDown(
+      Uint8List bytes, double maxWidthOrHeight) async {
+    return ImageGeneral.scaleDown(bytes, maxWidthOrHeight);
   }
 }

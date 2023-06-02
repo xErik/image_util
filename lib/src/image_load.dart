@@ -4,23 +4,26 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_util_flutter/src/image_general.dart';
 
 class ImageLoad {
-  static Future<Uint8List> loadImageWeb(
-      double widthMax, double heightMax, int quality, url) async {
-    return await _loadFromUrlAndResize(url, widthMax, heightMax, quality);
+  static Future<Uint8List> loadImageWeb(String url,
+      {double? widthMax, double? heightMax, int? quality}) async {
+    return await _loadFromUrlAndResize(url,
+        widthMax: widthMax, heightMax: heightMax, quality: quality);
   }
 
   static Future<Uint8List> loadImageGallery(
-      double widthMax, double heightMax, int quality) async {
-    return _loadImage(false, widthMax, heightMax, quality);
+      {double? widthMax, double? heightMax, int? quality}) async {
+    return _loadImage(false,
+        widthMax: widthMax, heightMax: heightMax, quality: quality);
   }
 
   static Future<Uint8List> loadImageCamera(
-      double widthMax, double heightMax, int quality) async {
-    return _loadImage(true, widthMax, heightMax, quality);
+      {double? widthMax, double? heightMax, int? quality}) async {
+    return _loadImage(true,
+        widthMax: widthMax, heightMax: heightMax, quality: quality);
   }
 
-  static Future<Uint8List> _loadImage(
-      bool loadCamera, double widthMax, double heightMax, int quality) async {
+  static Future<Uint8List> _loadImage(bool loadCamera,
+      {double? widthMax, double? heightMax, int? quality}) async {
     final XFile? image = await ImagePicker().pickImage(
         source: loadCamera ? ImageSource.camera : ImageSource.gallery,
         maxWidth: widthMax,
@@ -33,7 +36,11 @@ class ImageLoad {
         return _loadFromUrl(image.path);
       } else {
         final bytes = await image.readAsBytes();
-        return await ImageGeneral.compressToJpg(bytes, widthMax, heightMax);
+        if (widthMax != null && heightMax != null) {
+          return await ImageGeneral.compressToJpg(bytes,
+              width: widthMax, height: heightMax, quality: quality);
+        }
+        return bytes;
       }
     }
 
@@ -44,10 +51,13 @@ class ImageLoad {
     return (await http.get(Uri.parse(url))).bodyBytes;
   }
 
-  static Future<Uint8List> _loadFromUrlAndResize(
-      String url, double widthMax, double heightMax, int quality) async {
-    Uint8List? bytes = (await _loadFromUrl(url));
-    return await ImageGeneral.compressToJpg(bytes, widthMax, heightMax,
-        quality: quality);
+  static Future<Uint8List> _loadFromUrlAndResize(String url,
+      {double? widthMax, double? heightMax, int? quality}) async {
+    Uint8List bytes = (await _loadFromUrl(url));
+    if (widthMax != null && heightMax != null) {
+      return await ImageGeneral.compressToJpg(bytes,
+          width: widthMax, height: heightMax, quality: quality);
+    }
+    return bytes;
   }
 }

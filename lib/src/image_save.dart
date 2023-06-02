@@ -42,8 +42,8 @@ class ImageSave {
 
     Uint8List jpegBytes = await ImageGeneral.compress(
       bytes,
-      size.width,
-      size.height,
+      width: size.width,
+      height: size.height,
       quality: quality,
       rotate: rotate,
       format: format,
@@ -84,8 +84,8 @@ class ImageSave {
 
     var jpegBytes = await ImageGeneral.compress(
       bytes,
-      size.width,
-      size.height,
+      width: size.width,
+      height: size.height,
       format: format,
       quality: quality,
       rotate: rotate,
