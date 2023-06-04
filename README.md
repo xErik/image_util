@@ -2,6 +2,8 @@ Functions to load, save, share and manipulate images as bytes.
 
 Thin wrapper of various packages related to image processing.
 
+**This is an internal package, unlikely that you want to use it.**
+
 ## Note
 
 * Web: `saveAs()` triggers a download.
@@ -83,37 +85,5 @@ FlutterImageUtil {
   /// Loads an image using the local camera.
   static Future<Uint8List> loadFromCamera(
     double widthMax, double heightMax, int quality);
-
-  // -------------------------------------------
-  // GENERAL
-  // -------------------------------------------
-
-  /// Compresses `bytes` to PNG.
-  static Future<Uint8List> compressToPng(
-    Uint8List pngBytes, double width, double height,
-    {int quality = 100});
-
-  /// Compresses `bytes` to JPG.
-  static Future<Uint8List> compressToJpg(
-    Uint8List pngBytes, double width, double height,
-    {int quality = 100});
-
-  /// Compresses `bytes` to WEBP.
-  ///
-  /// Only on Android.
-  static Future<Uint8List> compressToWebp(
-    Uint8List pngBytes, double width, double height,
-    [int quality = 100]);
-
-  /// Sets the DPI in EXIF.
-  static Future<Uint8List> setDpi(Uint8List imageBytes, int dpi);
-
-  /// Returns the `Size` of the image.
-  static Size getSize(Uint8List bytes);
-
-
-  /// Rotates the image.
-  static Future<Uint8List> rotate(Uint8List bytes, int rotate,
-      {ImageFormat format = ImageFormat.jpg})
 }
 ```

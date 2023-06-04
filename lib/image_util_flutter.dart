@@ -7,7 +7,7 @@ import 'package:image_util_flutter/src/image_general.dart';
 import 'package:image_util_flutter/src/image_load.dart';
 import 'package:image_util_flutter/src/image_save.dart';
 
-enum ImageFormat { jpeg, png, webp }
+// enum ImageFormat { jpeg, png, webp }
 
 /// Assortment of methods to load, save, share and manipulate images.
 class ImageUtilFlutter {
@@ -20,7 +20,34 @@ class ImageUtilFlutter {
   /// If quality, size or dpi are given, they will be applied
   /// before sharing the image.
   ///
-  /// Default: JPG.
+  /// ### Sharing on Web
+  ///
+  /// Sharing on Web does not work. Use `saveToJpg()` instead.
+  ///
+  /// ### How to get the render box:
+  /// ```
+  /// if(context.mounted) {
+  ///   final RenderBox? box = context.findRenderObject() as RenderBox?;
+  /// }
+  /// ```
+  static Future<void> shareAsJpg(
+    String title,
+    String message,
+    Uint8List bytes,
+    final RenderBox? box, {
+    int quality = 100,
+    Size? size,
+    int? dpi,
+    int rotate = 0,
+  }) async {
+    return ImageSave.shareAsJpg(title, message, bytes, box,
+        quality: quality, size: size, dpi: dpi);
+  }
+
+  /// Shares an image via Share-dialog.
+  ///
+  /// If quality, size or dpi are given, they will be applied
+  /// before sharing the image.
   ///
   /// ### Sharing on Web
   ///
@@ -32,19 +59,14 @@ class ImageUtilFlutter {
   ///   final RenderBox? box = context.findRenderObject() as RenderBox?;
   /// }
   /// ```
-  static Future<void> shareAs(
+  static Future<void> shareAsPng(
     String title,
     String message,
     Uint8List bytes,
     final RenderBox? box, {
-    int quality = 100,
     Size? size,
-    int? dpi,
-    int rotate = 0,
-    ImageFormat format = ImageFormat.jpeg,
   }) async {
-    return ImageSave.shareAs(title, message, bytes, box,
-        quality: quality, size: size, dpi: dpi, rotate: rotate, format: format);
+    return ImageSave.shareAsPng(title, message, bytes, box, size: size);
   }
 
   /// Web: Downloads the file via Browser.
@@ -55,7 +77,7 @@ class ImageUtilFlutter {
   /// Returns the String-path of the created File.
   ///
   /// Default: JPG.
-  static Future<String?> saveAs(
+  static Future<String?> saveAsJpg(
     Uint8List bytes,
     String name, {
     String? album,
@@ -63,68 +85,45 @@ class ImageUtilFlutter {
     Size? size,
     int? dpi,
     int rotate = 0,
-    ImageFormat format = ImageFormat.jpeg,
   }) async {
-    return ImageSave.saveAs(format, bytes, name,
-        album: album, quality: quality, size: size, dpi: dpi, rotate: rotate);
+    return ImageSave.saveAsJpg(bytes, name,
+        album: album, quality: quality, size: size, dpi: dpi);
+  }
+
+  /// Web: Downloads the file via Browser.
+  ///
+  /// Android: Saves in `album`. If the album is NULL its name will
+  /// be the image name.
+  ///
+  /// Returns the String-path of the created File.
+  ///
+  /// Default: JPG.
+  static Future<String?> saveAsPng(
+    Uint8List bytes,
+    String name, {
+    String? album,
+    Size? size,
+  }) async {
+    return ImageSave.saveAsPng(bytes, name, album: album, size: size);
   }
 
   // --------------------------------------------------------------------
   // LOAD
   // --------------------------------------------------------------------
 
-  /// Loads an image from the given  [url].
-  ///
-  /// Keep in mind to adjust the server CORS settings.
-  static Future<Uint8List> loadFromWeb(url,
-      {double? widthMax, double? heightMax, int? quality}) async {
-    return await ImageLoad.loadImageWeb(url,
-        widthMax: widthMax, heightMax: heightMax, quality: quality);
+  static Future<Uint8List> load({int? widthMax, int? heightMax}) async {
+    return await ImageLoad.loadImage(widthMax: widthMax, heightMax: heightMax);
   }
 
-  /// Loads an image from the local gallery.
-  static Future<Uint8List> loadFromGallery(
-      {double? widthMax, double? heightMax, int? quality}) async {
-    return await ImageLoad.loadImageGallery(
-        widthMax: widthMax, heightMax: heightMax, quality: quality);
-  }
-
-  /// Loads an image using the local camera.
-  static Future<Uint8List> loadFromCamera(
-      {double? widthMax, double? heightMax, int? quality}) async {
-    return await ImageLoad.loadImageCamera(
+  static Future<Uint8List> loadPicker(
+      {double? widthMax, double? heightMax, int quality = 80}) async {
+    return ImageLoad.loadImagePicker(
         widthMax: widthMax, heightMax: heightMax, quality: quality);
   }
 
   // --------------------------------------------------------------------
   // GENERAL
   // --------------------------------------------------------------------
-
-  /// Compresses `bytes` to PNG.
-  static Future<Uint8List> compressToPng(
-      Uint8List pngBytes, double width, double height,
-      {int quality = 100}) async {
-    return await ImageGeneral.compressToPng(pngBytes,
-        width: width, height: height, quality: quality);
-  }
-
-  /// Compresses `bytes` to JPG.
-  static Future<Uint8List> compressToJpg(
-      Uint8List pngBytes, double width, double height,
-      {int quality = 100}) async {
-    return await ImageGeneral.compressToJpg(pngBytes,
-        width: width, height: height, quality: quality);
-  }
-
-  /// Compresses `bytes` to WEBP.
-  ///
-  /// Only an Android.
-  static Future<Uint8List> compressToWebp(
-      Uint8List pngBytes, double width, double height,
-      [int quality = 100]) async {
-    return await ImageGeneral.compressToWebp(pngBytes,
-        width: width, height: height, quality: quality);
-  }
 
   /// Sets the DPI in EXIF.
   static Future<Uint8List> setDpi(Uint8List imageBytes, int dpi) async =>
@@ -133,21 +132,17 @@ class ImageUtilFlutter {
   /// Returns the `Size` of image bytes.
   static Size getSize(Uint8List bytes) => ImageGeneral.getSize(bytes);
 
-  /// Rotates and image.
-  static Future<Uint8List> rotate(Uint8List bytes, int rotate,
-      {ImageFormat format = ImageFormat.jpeg}) async {
-    return ImageGeneral.rotate(bytes, rotate);
-  }
+  static Future<Uint8List> compress(bytes, {int quality = 80}) async =>
+      ImageGeneral.compressToJpg(bytes, quality: quality);
 
-  /// Scales the image up to a minimum dimension.
-  static Future<Uint8List> scaleUp(
-      Uint8List bytes, double minWidthOrHeight) async {
-    return ImageGeneral.scaleUp(bytes, minWidthOrHeight);
-  }
-
-  /// Scales the image down to a maximum dimension.
   static Future<Uint8List> scaleDown(
-      Uint8List bytes, double maxWidthOrHeight) async {
-    return ImageGeneral.scaleDown(bytes, maxWidthOrHeight);
+    Uint8List bytes,
+    int maxWidthOrHeight,
+  ) async =>
+      ImageGeneral.scaleDown(bytes, maxWidthOrHeight);
+
+  static Future<Uint8List> compressToJpg(Uint8List bytes,
+      {int quality = 80}) async {
+    return ImageGeneral.compressToJpg(bytes, quality: quality);
   }
 }

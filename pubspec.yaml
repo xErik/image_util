@@ -1,6 +1,6 @@
 name: image_util_flutter
 description: Functions to load, save, share and manipulate images as bytes.
-version: 0.0.5
+version: 0.1.0
 repository: https://github.com/xErik/image_util
 
 environment:
@@ -13,13 +13,14 @@ dependencies:
 
   image_picker: ^0.8.7+5
   image_save: ^5.0.0
-  # screenshot: ^2.1.0
   image_size_getter: ^2.1.2
-  flutter_image_compress: ^2.0.3
   share_plus: ^7.0.1
   flutter_exif_plugin: ^1.1.0
   http: ^0.13.6
-  # image: ^4.0.17
+  fast_image_resizer: ^0.0.2
+  file_selector: ^0.9.3
+  image_compression_flutter: ^1.0.3
+  
 
 dev_dependencies:
   flutter_test:
